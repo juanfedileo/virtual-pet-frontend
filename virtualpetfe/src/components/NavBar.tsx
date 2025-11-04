@@ -11,13 +11,15 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import PetsIcon from '@mui/icons-material/Pets';
+import { Link as RouterLink } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const { isAuthenticated, logout } = useAuth();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -34,23 +36,47 @@ const NavBar = () => {
     setAnchorElUser(null);
   };
 
+  //opciones del menu desplegable con logica
+  const handleLogout = () => {
+    logout(); // Llama a la función del contexto useAuth
+    handleCloseUserMenu(); // Cierra el menú después de la acción
+  };
+
+  let settingOptions = []; // Array vacío para agregar dinamicamente
+
+  //opciones del menu desplegable simples
+  if (isAuthenticated) {
+    // Si el usuario ESTÁ logueado, mostramos estas opciones
+    settingOptions = [
+      { label: 'Profile', path: '/profile' },
+      { label: 'Account', path: '/account' },
+      { label: 'Backoffice', path: '/admin' },
+      { label: 'Logout', action: handleLogout }
+    ];
+  } else {
+    // Si el usuario NO ESTÁ logueado, mostramos solo Login
+    settingOptions = [
+      { label: 'Login', path: '/login' }
+    ];
+  }
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" elevation={0} sx={{ bgcolor: '#FFF7DD', color: '#333', borderBottom: '1px solid #e0e0e0' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+        <PetsIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: '#80A1BA' }} />
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={RouterLink}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
+              fontFamily: '"Quicksand", "Roboto", "Arial", sans-serif',
+              fontWeight: 800,
+              letterSpacing: '.05rem',
+              color: '#435663',
               textDecoration: 'none',
             }}
           >
@@ -91,31 +117,31 @@ const NavBar = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <PetsIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, color: '#80A1BA' }} />
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={RouterLink}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: '"Quicksand", "Roboto", "Arial", sans-serif',
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
+              letterSpacing: '0.5rem',
+              color: '#435663',
               textDecoration: 'none',
             }}
           >
-            LOGO
+            VirtualPet
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{my: 2, color: '#435663', paddingLeft: 10, display: 'block', fontWeight: 600,'&:hover': { bgcolor: 'rgb(180, 222, 189, 0.24)' }}}
               >
                 {page}
               </Button>
@@ -143,10 +169,29 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                </MenuItem>
+              {settingOptions.map((setting) => (
+                
+                // Opción 1: Si el item tiene 'path', es un LINK
+                setting.path ? (
+                  <MenuItem
+                    key={setting.label}
+                    component={RouterLink} // Usa RouterLink COMO el MenuItem
+                    to={setting.path}       // Le pasa la ruta
+                    onClick={handleCloseUserMenu} // Cierra el menú al hacer click
+                  >
+                    <Typography sx={{ textAlign: 'center' }}>{setting.label}</Typography>
+                  </MenuItem>
+                ) : (
+                
+                // Opción 2: Si tiene 'action', es un BOTÓN
+                  <MenuItem
+                    key={setting.label}
+                    onClick={setting.action} // Llama a la acción (ej. handleLogout)
+                  >
+                    <Typography sx={{ textAlign: 'center' }}>{setting.label}</Typography>
+                  </MenuItem>
+                )
+
               ))}
             </Menu>
           </Box>
