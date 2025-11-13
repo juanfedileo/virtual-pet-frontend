@@ -16,7 +16,6 @@ import { Box } from '@mui/material'
 function App() {
   return (
     <CartProvider>
-      <BrowserRouter>
         <NavBar />
         <Box sx={{ pt: '64px' }}>
           <Routes>
@@ -30,7 +29,6 @@ function App() {
           </Routes>
         </Box>
         <Footer />
-      </BrowserRouter>
     </CartProvider>
   )
 }
