@@ -1,13 +1,16 @@
 import * as React from "react";
-import { Card, CardContent, CardMedia, Typography, CardActionArea } from "@mui/material";
+import { Card, CardContent, CardMedia, Typography, CardActionArea, CardActions, Button } from "@mui/material";
+import { useCart } from "../../../contexts/CartContext";
 
 interface ProductItemProps {
+  id?: number;
   name: string;
   size: string;
   price: number;
   image: string;
 }
-const ProductItem : React.FC<ProductItemProps> = ({ name, size, price, image }) => {
+const ProductItem : React.FC<ProductItemProps> = ({ id, name, size, price, image }) => {
+  const { addToCart } = useCart();
   return (
     <Card
       variant="outlined"
@@ -39,6 +42,11 @@ const ProductItem : React.FC<ProductItemProps> = ({ name, size, price, image }) 
           </Typography>
         </CardContent>
       </CardActionArea>
+      <CardActions>
+        <Button size="small" color="primary" onClick={() => addToCart({ id: id ?? Date.now(), name, price, image, quantity: 1 })}>
+          Add to cart
+        </Button>
+      </CardActions>
     </Card>
   );
 };

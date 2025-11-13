@@ -13,7 +13,11 @@ interface Product {
   image: string;
 }
 
-const ProductList: React.FC = () => {
+interface ProductListProps {
+  searchTerm?: string;
+}
+
+const ProductList: React.FC<ProductListProps> = ({ searchTerm = "" }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,16 +46,19 @@ const ProductList: React.FC = () => {
       </Typography>
 
       <GridLegacy container spacing={3} justifyContent="center">
-        {products.map((product) => (
-        <GridLegacy item xs={12} sm={6} md={4} key={product.id} component="div">
-            <ProductItem
-                name={product.title}
-                size={product.category}
-                price={product.price}
-                image={product.image}
-            />
-        </GridLegacy>
-        ))}
+        {products
+          .filter((p) => p.title.toLowerCase().includes(searchTerm.toLowerCase()))
+          .map((product) => (
+          <GridLegacy item xs={12} sm={6} md={4} key={product.id} component="div">
+              <ProductItem
+                  id={product.id}
+                  name={product.title}
+                  size={product.category}
+                  price={product.price}
+                  image={product.image}
+              />
+          </GridLegacy>
+          ))}
        </GridLegacy>
 
     </div>
