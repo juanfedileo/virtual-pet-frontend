@@ -1,8 +1,9 @@
 import * as React from "react";
 import { useState } from "react";
-import { Card, CardMedia, Typography, Button, Box, IconButton } from "@mui/material";
+import { Card, CardMedia, Typography, Button, Box, IconButton, Snackbar, Alert } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useCart } from "../../../contexts/CartContext";
 
 interface ProductItemProps {
@@ -15,6 +16,8 @@ interface ProductItemProps {
 const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image }) => {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [showCheckmark, setShowCheckmark] = useState(false);
+  const [snackbar, setSnackbar] = React.useState<{ open: boolean; message: string }>({ open: false, message: '' });
 
   const handleIncrement = () => setQuantity((q) => q + 1);
   const handleDecrement = () => setQuantity((q) => Math.max(1, q - 1));
@@ -23,6 +26,13 @@ const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image }) => 
     for (let i = 0; i < quantity; i++) {
       addToCart({ id, name, price, image, quantity: 1 });
     }
+    
+    // Show animated checkmark
+    setShowCheckmark(true);
+    setSnackbar({ open: true, message: `${quantity} ${quantity === 1 ? 'artículo agregado' : 'artículos agregados'} al carrito` });
+    
+    // Reset state
+    setTimeout(() => setShowCheckmark(false), 1500);
     setQuantity(1);
   };
 
@@ -39,8 +49,46 @@ const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image }) => 
           boxShadow: '0 8px 24px rgba(4, 119, 190, 0.2)',
           transform: 'translateY(-4px)',
         },
+        position: 'relative',
       }}
     >
+      {/* Animated Checkmark Overlay */}
+      {showCheckmark && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(0, 94, 151, 0.9)',
+            borderRadius: '12px',
+            zIndex: 10,
+            animation: 'fadeInOut 1.5s ease-in-out',
+            '@keyframes fadeInOut': {
+              '0%': { opacity: 0 },
+              '20%': { opacity: 1 },
+              '80%': { opacity: 1 },
+              '100%': { opacity: 0 },
+            },
+          }}
+        >
+          <CheckCircleIcon
+            sx={{
+              fontSize: '64px',
+              color: '#FFFFFF',
+              animation: 'scaleCheck 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+              '@keyframes scaleCheck': {
+                '0%': { transform: 'scale(0)' },
+                '100%': { transform: 'scale(1)' },
+              },
+            }}
+          />
+        </Box>
+      )}
       {/* Product Image */}
       <CardMedia
         component="img"
@@ -130,13 +178,29 @@ const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image }) => 
             color: '#FFFFFF',
             fontWeight: 600,
             textTransform: 'none',
-            borderRadius: '6px',
+            borderRadius: '10px',
+            padding: '10px',
             '&:hover': { boxShadow: '0 4px 12px rgba(4, 119, 190, 0.3)' },
           }}
         >
-          Add to Cart
+          Comprar
         </Button>
       </Box>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Card>
   );
 };

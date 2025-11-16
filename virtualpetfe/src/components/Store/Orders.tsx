@@ -97,7 +97,7 @@ const Orders: React.FC = () => {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h4" sx={{ fontWeight: 'bold', ml: 2, color: '#005E97' }}>
-            My Orders
+            Mis Pedidos
           </Typography>
         </Box>
 
@@ -142,7 +142,7 @@ const Orders: React.FC = () => {
               </Stack>
             ) : (
               <Typography sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
-                No orders found
+                No se encontraron pedidos
               </Typography>
             )}
           </CardContent>

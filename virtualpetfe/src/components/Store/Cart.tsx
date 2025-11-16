@@ -1,6 +1,6 @@
 import React from "react";
 import { useCart } from "../../contexts/CartContext";
-import { Box, Typography, IconButton, Button, Card, CardContent, CardActions, Divider, Stack, CircularProgress } from "@mui/material";
+import { Box, Typography, IconButton, Button, Card, CardContent, CardActions, Divider, Stack, CircularProgress, Snackbar, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -15,10 +15,11 @@ const Cart: React.FC = () => {
   const { cart, removeFromCart, clearCart, total } = useCart();
 
   const [isCheckingOut, setIsCheckingOut] = React.useState(false);
+  const [snackbar, setSnackbar] = React.useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({ open: false, message: '', severity: 'error' });
 
   const performCheckout = async (clientId: number, token: string) => {
     if (!clientId || !token) {
-      alert('Missing authentication credentials. Please login again.');
+      setSnackbar({ open: true, message: 'Credenciales de autenticación faltantes. Por favor, inicia sesión de nuevo.', severity: 'error' });
       return;
     }
 
@@ -56,7 +57,7 @@ const Cart: React.FC = () => {
       navigate('/orders');
     } catch (err: unknown) {
       console.error('Checkout error:', err);
-      alert('Failed to place order. Please try again.');
+      setSnackbar({ open: true, message: 'Error al realizar el pedido. Por favor, intenta de nuevo.', severity: 'error' });
     } finally {
       setIsCheckingOut(false);
     }
@@ -104,8 +105,8 @@ const Cart: React.FC = () => {
           <IconButton onClick={() => navigate(-1)} color="primary" sx={{ color: '#005E97' }}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h4" sx={{ fontWeight: 'bold', ml: 2, color: '#005E97' }}>
-            Cart
+            <Typography variant="h4" sx={{ fontWeight: 'bold', ml: 2, color: '#005E97' }}>
+            Carrito
           </Typography>
         </Box>
 
@@ -121,10 +122,10 @@ const Cart: React.FC = () => {
             }}
           >
             <Typography variant="h6" sx={{ color: '#404751', mb: 2 }}>
-              Your cart is empty
+              Tu carrito está vacío
             </Typography>
             <Typography variant="body2" sx={{ color: '#707882', mb: 4 }}>
-              Add some items from the catalog to get started!
+              ¡Agrega algunos artículos del catálogo para comenzar!
             </Typography>
           </Box>
         ) : (
@@ -137,7 +138,7 @@ const Cart: React.FC = () => {
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <Box>
                           <Typography variant="h6">{it.name}</Typography>
-                          <Typography variant="body2" color="text.secondary">Qty: {it.quantity}</Typography>
+                          <Typography variant="body2" color="text.secondary">Cantidad: {it.quantity}</Typography>
                         </Box>
                         <IconButton edge="end" aria-label="delete" onClick={() => removeFromCart(it.id)}>
                           <DeleteIcon />
@@ -154,7 +155,7 @@ const Cart: React.FC = () => {
             </CardContent>
             <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
               <Box>
-                <Button variant="outlined" color="secondary" onClick={clearCart}>Clear</Button>
+                <Button variant="outlined" color="secondary" onClick={clearCart}>Limpiar</Button>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>${total.toFixed(2)}</Typography>
@@ -162,7 +163,7 @@ const Cart: React.FC = () => {
                   {isCheckingOut && (
                     <CircularProgress size={20} sx={{ position: 'absolute', left: '12px' }} />
                   )}
-                  <span style={{ opacity: isCheckingOut ? 0.6 : 1 }}>{isCheckingOut ? 'Placing order...' : 'Checkout'}</span>
+                  <span style={{ opacity: isCheckingOut ? 0.6 : 1 }}>{isCheckingOut ? 'Realizando pedido...' : 'Finalizar compra'}</span>
                 </Button>
               </Box>
             </CardActions>
@@ -179,9 +180,24 @@ const Cart: React.FC = () => {
               fontWeight: 600,
             }}
           >
-            Continue Shopping
+            Seguir Comprando
           </Button>
         </Box>
+
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </Box>
     </Box>
   );

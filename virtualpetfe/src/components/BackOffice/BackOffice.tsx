@@ -11,6 +11,8 @@ import {
   Button,
   IconButton,
   CircularProgress,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -67,6 +69,7 @@ const BackOffice: React.FC = () => {
   const [orders, setOrders] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [snackbar, setSnackbar] = React.useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({ open: false, message: '', severity: 'error' });
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
@@ -129,7 +132,7 @@ const BackOffice: React.FC = () => {
         );
       } catch (err: unknown) {
         console.error('Error updating order status:', err);
-        alert('Failed to update order status. Please try again.');
+        setSnackbar({ open: true, message: 'Error al actualizar el estado del pedido. Por favor intenta de nuevo.', severity: 'error' });
       }
     };
 
@@ -144,17 +147,17 @@ const BackOffice: React.FC = () => {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h4" sx={{ fontWeight: 'bold', ml: 2, color: '#005E97' }}>
-            Back Office
+            Oficina Administrativa
           </Typography>
         </Box>
 
         <Card sx={{ maxHeight: '70vh', overflow: 'auto', borderRadius: '12px', boxShadow: '0 2px 12px rgba(0, 94, 151, 0.1)' }}>
           <CardContent>
             <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', color: '#005E97' }}>
-              Store Manager
+              Gestor de Tienda
             </Typography>
             <Typography variant="subtitle2" color="text.secondary" gutterBottom sx={{ mb: 3 }}>
-              Orders Management
+              Gestión de Pedidos
             </Typography>
 
             {loading ? (
@@ -174,7 +177,7 @@ const BackOffice: React.FC = () => {
                         <Box>
                           <Typography variant="h6">Order #{o.id}</Typography>
                           <Typography variant="body2" color="text.secondary">
-                            Client: {o.client} ({o.email})
+                            Cliente: {o.client} ({o.email})
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
                             {new Date(o.createdAt).toLocaleString()}
@@ -217,7 +220,7 @@ const BackOffice: React.FC = () => {
                           onClick={() => updateOrderStatus(o.id, 'Ready to ship')}
                           disabled={o.status === 'Ready to ship' || o.status === 'Shipped' || o.status === 'Delivered'}
                         >
-                          Ready to ship
+                          Listo para enviar
                         </Button>
                         <Button
                           size="small"
@@ -226,7 +229,7 @@ const BackOffice: React.FC = () => {
                           onClick={() => updateOrderStatus(o.id, 'Shipped')}
                           disabled={o.status === 'Shipped' || o.status === 'Delivered'}
                         >
-                          Shipped
+                          Enviado
                         </Button>
                       </Box>
                     </CardActions>
@@ -235,11 +238,26 @@ const BackOffice: React.FC = () => {
               </Stack>
             ) : (
               <Typography sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
-                No orders found
+                No se encontraron pedidos
               </Typography>
             )}
           </CardContent>
         </Card>
+
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </Box>
     </Box>
   );

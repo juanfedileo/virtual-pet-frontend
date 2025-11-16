@@ -16,7 +16,7 @@ const Catalog: React.FC = () => {
           <ArrowBackIcon />
         </IconButton>
         <Typography variant="h4" sx={{ fontWeight: 'bold', ml: 2, color: '#005E97' }}>
-          Catalog
+          Catálogo
         </Typography>
       </Box>
       <SearchBar value={search} onChange={setSearch} />

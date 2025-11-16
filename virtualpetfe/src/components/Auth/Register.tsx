@@ -46,15 +46,15 @@ const Register: React.FC = () => {
   // Errors state
   const [errors, setErrors] = React.useState<Record<string, string>>({});
 
-  const steps = ['Personal Info', 'Address & Contact', 'Account'];
+  const steps = ['Información Personal', 'Dirección y Contacto', 'Cuenta'];
 
   // Validation functions
   const validateStep1 = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.surname.trim()) newErrors.surname = 'Surname is required';
+    if (!formData.name.trim()) newErrors.name = 'El nombre es requerido';
+    if (!formData.surname.trim()) newErrors.surname = 'El apellido es requerido';
     if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = 'Por favor ingresa un correo electrónico válido';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -62,10 +62,10 @@ const Register: React.FC = () => {
 
   const validateStep2 = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.address.trim()) newErrors.address = 'Address is required';
-    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    if (!formData.address.trim()) newErrors.address = 'La dirección es requerida';
+    if (!formData.phone.trim()) newErrors.phone = 'El número de teléfono es requerido';
     if (!/^\d{10,}$/.test(formData.phone.replace(/\D/g, ''))) {
-      newErrors.phone = 'Phone must be at least 10 digits';
+      newErrors.phone = 'El teléfono debe tener al menos 10 dígitos';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -74,13 +74,13 @@ const Register: React.FC = () => {
   const validateStep3 = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.username || !formData.username.trim()) {
-      newErrors.username = 'Username is required';
+      newErrors.username = 'El nombre de usuario es requerido';
     }
     if (!formData.password || formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
     }
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = 'Las contraseñas no coinciden';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -163,7 +163,7 @@ const Register: React.FC = () => {
         });
         setErrors(backendErrors);
       }
-      setGeneralError(error.message || 'Registration failed. Please try again.');
+      setGeneralError(error.message || 'El registro falló. Por favor intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -183,7 +183,7 @@ const Register: React.FC = () => {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h4" gutterBottom sx={{ ml: 1, fontWeight: 'bold', color: '#005E97' }}>
-            Register
+            Registrarse
           </Typography>
         </Box>
 
@@ -206,7 +206,7 @@ const Register: React.FC = () => {
         {activeStep === 0 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
-              label="Name"
+              label="Nombre"
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
               fullWidth
@@ -214,7 +214,7 @@ const Register: React.FC = () => {
               helperText={errors.name}
             />
             <TextField
-              label="Surname"
+              label="Apellido"
               value={formData.surname}
               onChange={(e) => handleChange('surname', e.target.value)}
               fullWidth
@@ -222,7 +222,7 @@ const Register: React.FC = () => {
               helperText={errors.surname}
             />
             <TextField
-              label="Email"
+              label="Correo Electrónico"
               type="email"
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
@@ -237,7 +237,7 @@ const Register: React.FC = () => {
         {activeStep === 1 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
-              label="Address"
+              label="Dirección"
               value={formData.address}
               onChange={(e) => handleChange('address', e.target.value)}
               fullWidth
@@ -245,13 +245,13 @@ const Register: React.FC = () => {
               helperText={errors.address}
             />
             <TextField
-              label="Phone Number"
+              label="Número de Teléfono"
               value={formData.phone}
               onChange={(e) => handleChange('phone', e.target.value)}
               fullWidth
               error={!!errors.phone}
               helperText={errors.phone}
-              placeholder="Enter at least 10 digits"
+              placeholder="Ingresa al menos 10 dígitos"
             />
           </Box>
         )}
@@ -287,7 +287,7 @@ const Register: React.FC = () => {
               }}
             />
             <TextField
-              label="Confirm Password"
+              label="Confirmar Contraseña"
               type={showConfirm ? 'text' : 'password'}
               value={formData.confirmPassword}
               onChange={(e) => handleChange('confirmPassword', e.target.value)}
@@ -339,8 +339,8 @@ const Register: React.FC = () => {
         </Box>
 
         <Typography sx={{ mt: 3, textAlign: 'center' }}>
-          Already have an account?{' '}
-          <MuiLink component={Link} to="/login">Login</MuiLink>
+          ¿Ya tienes una cuenta?{' '}
+          <MuiLink component={Link} to="/login">Iniciar sesión</MuiLink>
         </Typography>
       </Box>
     </Box>

@@ -22,10 +22,10 @@ const Login: React.FC = () => {
   const validate = () => {
     const newErrors: typeof errors = {};
     if (!username || username.trim().length === 0) {
-      newErrors.username = "Username is required";
+      newErrors.username = "El nombre de usuario es requerido";
     }
     if (!password || password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = "La contraseña debe tener al menos 6 caracteres";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -83,10 +83,10 @@ const Login: React.FC = () => {
         if (Object.keys(backendErrors).length > 0) {
           setErrors(backendErrors);
         } else {
-          setGeneralError(error.message || 'Login failed. Please try again.');
+          setGeneralError(error.message || 'Inicio de sesión fallido. Por favor intenta de nuevo.');
         }
       } else {
-        setGeneralError(error.message || 'Login failed. Please try again.');
+        setGeneralError(error.message || 'Inicio de sesión fallido. Por favor intenta de nuevo.');
       }
     } finally {
       setIsLoading(false);
@@ -103,7 +103,7 @@ const Login: React.FC = () => {
             <IconButton onClick={() => navigate('/')} color="primary" sx={{ color: '#005E97' }} disabled={isLoading}>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant="h4" gutterBottom sx={{ ml: 1, fontWeight: 'bold', color: '#005E97' }}>Login</Typography>
+            <Typography variant="h4" gutterBottom sx={{ ml: 1, fontWeight: 'bold', color: '#005E97' }}>Iniciar Sesión</Typography>
           </Box>
 
           {/* General Error Alert */}
@@ -114,7 +114,7 @@ const Login: React.FC = () => {
           )}
             
             <TextField
-              label="Username"
+              label="Nombre de usuario"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               fullWidth
@@ -125,7 +125,7 @@ const Login: React.FC = () => {
             />
             
             <TextField
-              label="Password"
+              label="Contraseña"
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -171,13 +171,13 @@ const Login: React.FC = () => {
                 />
               )}
               <span style={{ opacity: isLoading ? 0 : 1 }}>
-                Login
+                Iniciar Sesión
               </span>
             </Button>
             
             <Typography sx={{ mt: 3, color: '#404751' }}>
-              Don't have an account?{' '}
-              <MuiLink component={Link} to="/register" sx={{ color: '#005E97', fontWeight: 600, '&:hover': { color: '#003555' } }}>Register</MuiLink>
+              ¿No tienes cuenta?{' '}
+              <MuiLink component={Link} to="/register" sx={{ color: '#005E97', fontWeight: 600, '&:hover': { color: '#003555' } }}>Registrarse</MuiLink>
             </Typography>
           </Box>
       </Box>

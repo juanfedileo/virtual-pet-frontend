@@ -119,7 +119,7 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm = "" }) => {
   return (
     <Box sx={{ padding: "2rem", pb: 8 }}>
       <Typography variant="h4" gutterBottom align="center" sx={{ color: '#005E97', fontWeight: 'bold', mb: 4 }}>
-        Our Pet Products
+        Nuestros Productos para Mascotas
       </Typography>
 
       <Box
@@ -150,7 +150,7 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm = "" }) => {
           ))
         ) : (
           <Typography sx={{ gridColumn: '1 / -1', textAlign: 'center', color: '#404751', py: 4 }}>
-            No products found matching "{searchTerm}"
+            No se encontraron productos que coincidan con \"{searchTerm}\"
           </Typography>
         )}
       </Box>

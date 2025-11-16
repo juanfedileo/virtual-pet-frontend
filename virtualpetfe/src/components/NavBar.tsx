@@ -66,7 +66,7 @@ const NavBar = () => {
               component={Link}
               to="/cart"
               color="inherit"
-              aria-label="cart"
+              aria-label="carrito"
               sx={{
                 '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
                 transition: 'background-color 0.3s',
@@ -82,7 +82,7 @@ const NavBar = () => {
                 component={Link}
                 to="/orders"
                 color="inherit"
-                aria-label="orders"
+                aria-label="pedidos"
                 sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
               >
                 <ReceiptLongIcon />
@@ -94,7 +94,7 @@ const NavBar = () => {
                 component={Link}
                 to="/backoffice"
                 color="inherit"
-                aria-label="backoffice"
+                aria-label="oficina-administrativa"
                 sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
               >
                 <AdminPanelSettingsIcon />
@@ -106,7 +106,7 @@ const NavBar = () => {
                 component={Link}
                 to="/login"
                 color="inherit"
-                aria-label="login"
+                aria-label="iniciar-sesion"
                 sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
               >
                 <PersonIcon />
@@ -115,7 +115,7 @@ const NavBar = () => {
               <IconButton
                 onClick={handleLogout}
                 color="inherit"
-                aria-label="logout"
+                aria-label="cerrar-sesion"
                 sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
               >
                 <LogoutIcon />
