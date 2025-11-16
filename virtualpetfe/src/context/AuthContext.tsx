@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, type ReactNode } from 'react';
+import { createContext, useState, useContext, type ReactNode } from 'react';
 
 // tipos
 interface User {
@@ -42,6 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // hook personalizado
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

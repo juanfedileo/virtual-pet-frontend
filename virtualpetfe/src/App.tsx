@@ -10,7 +10,7 @@ import Home from './components/Store/Home'
 import BackOffice from './components/BackOffice/BackOffice'
 import Footer from './components/Footer/Footer'
 import { CartProvider } from './contexts/CartContext'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { Box } from '@mui/material'
 
 function App() {
