@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
 import { getAccessToken, clearTokens, getUsername } from '../services/authService';
 
+
 // tipos
 interface User {
   username: string;
@@ -64,6 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // hook personalizado
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
