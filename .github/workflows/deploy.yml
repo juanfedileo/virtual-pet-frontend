@@ -35,7 +35,7 @@ jobs:
         run: aws s3 rm s3://virtual-pet-frontend/ --recursive
 
       - name: Upload to S3
-        run: aws s3 sync dist/ s3://virtual-pet-frontend/ --acl public-read
+        run: aws s3 sync dist/ s3://virtual-pet-frontend/
 
       - name: Set index and error documents (solo primera vez)
         run: |
