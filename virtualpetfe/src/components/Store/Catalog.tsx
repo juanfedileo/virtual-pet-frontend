@@ -12,11 +12,11 @@ const Catalog: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, mt: 3 }}>
-        <IconButton onClick={() => navigate(-1)} color="primary">
+        <IconButton onClick={() => navigate(-1)} color="primary" sx={{ color: '#005E97' }}>
           <ArrowBackIcon />
         </IconButton>
-        <Typography variant="h4" sx={{ fontWeight: 'bold', ml: 2 }}>
-          Catalog
+        <Typography variant="h4" sx={{ fontWeight: 'bold', ml: 2, color: '#005E97' }}>
+          Catálogo
         </Typography>
       </Box>
       <SearchBar value={search} onChange={setSearch} />

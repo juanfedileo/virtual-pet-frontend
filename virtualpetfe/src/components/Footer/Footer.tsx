@@ -5,65 +5,66 @@ const Footer: React.FC = () => {
   return (
     <Box
       sx={{
-        backgroundColor: '#f5f5f5',
-        py: 4,
+        backgroundColor: '#714F3A',
+        color: '#FFFFFF',
+        py: 5,
         mt: 8,
-        borderTop: '1px solid #ddd',
+        borderTop: '4px solid #8C6751',
       }}
     >
       <Container maxWidth="lg">
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 3 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 4 }}>
           {/* About */}
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-              About VirtualPet
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, fontSize: '1.1rem' }}>
+              Acerca de VirtualPet
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              VirtualPet is your trusted online store for all your pet needs. We offer high-quality products, veterinary services, and expert advice to keep your pets happy and healthy.
+            <Typography variant="body2" sx={{ color: '#FFD7C0', lineHeight: 1.6 }}>
+              VirtualPet es tu tienda en línea de confianza para todas las necesidades de tu mascota. Ofrecemos productos de alta calidad y asesoramiento experto para mantener a tus mascotas felices y saludables.
             </Typography>
           </Box>
 
           {/* Quick Links */}
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-              Quick Links
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, fontSize: '1.1rem' }}>
+              Enlaces Rápidos
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-              <Link href="#catalog" underline="hover" color="text.secondary">
-                Catalog
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Link href="#catalog" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
+                Catálogo
               </Link>
-              <Link href="#orders" underline="hover" color="text.secondary">
-                Orders
+              <Link href="#orders" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
+                Pedidos
               </Link>
-              <Link href="#about" underline="hover" color="text.secondary">
-                About Us
+              <Link href="#about" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
+                Sobre Nosotros
               </Link>
-              <Link href="#contact" underline="hover" color="text.secondary">
-                Contact
+              <Link href="#contact" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
+                Contacto
               </Link>
             </Box>
           </Box>
 
           {/* Contact Info */}
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-              Contact Us
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, fontSize: '1.1rem' }}>
+              Contáctanos
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: '#FFD7C0', mb: 1 }}>
               Email: support@virtualpet.com
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Phone: +1 (555) 123-4567
+            <Typography variant="body2" sx={{ color: '#FFD7C0', mb: 1 }}>
+              Tel: +1 (555) 123-4567
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Address: 123 Pet Street, Animal City, AC 12345
+            <Typography variant="body2" sx={{ color: '#FFD7C0' }}>
+              Direccion: 123 Pet Street, Animal City, AC 12345
             </Typography>
           </Box>
         </Box>
 
-        <Box sx={{ borderTop: '1px solid #ddd', mt: 3, pt: 3, textAlign: 'center' }}>
-          <Typography variant="body2" color="text.secondary">
-            © 2025 VirtualPet. All rights reserved.
+        <Box sx={{ borderTop: '1px solid #5F3F2C', mt: 4, pt: 4, textAlign: 'center' }}>
+          <Typography variant="body2" sx={{ color: '#EBBDA3' }}>
+            © 2025 VirtualPet. Todos los derechos reservados.
           </Typography>
         </Box>
       </Container>
