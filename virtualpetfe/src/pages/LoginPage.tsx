@@ -6,23 +6,14 @@ import { Container, TextField, Button, Typography, Box } from '@mui/material';
 export const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // --- SIMULACIÓN ---
-    // En el futuro, aquí harías el fetch a tu API de Django.
-    // Django te devolvería el rol del usuario.
-    // Por ahora, forzamos un login de admin si el usuario es 'admin'.
-    
-    if (username === 'admin') {
-      login(username, 'admin');
-      navigate('/admin'); // Lo mandamos al dashboard de admin
-    } else {
-      login(username, 'cliente');
-      navigate('/'); // Lo mandamos a la home
-    }
+    // Backend login is now handled by the Login component
+    // This page is kept for backwards compatibility
+    navigate('/login');
   };
 
   return (
