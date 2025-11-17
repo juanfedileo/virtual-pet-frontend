@@ -8,11 +8,13 @@ import banner3 from '../../assets/banner3.webp';
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const categories = [
-    { name: 'Alimentos', icon: '🍖', slug: 'alimento' },
-    { name: 'Juguetes', icon: '🎾', slug: 'juguete' },
-    { name: 'Mobiliario', icon: '🛋️', slug: 'mobiliario' },
-    { name: 'Productos Veterinarios', icon: '💊', slug: 'veterinaria' },
-  ];
+    { name: 'Comida', icon: '🍖', slug: 'comida' },
+    { name: 'Camas', icon: '🛏️', slug: 'camas' },
+    { name: 'Ropa', icon: '👕', slug: 'ropa' },
+    { name: 'Limpieza', icon: '🧼', slug: 'limpieza' },
+    { name: 'Varios', icon: '🧸', slug: 'varios' },
+
+  ];
 
   const carouselImages = [banner1, banner2, banner3];
 
