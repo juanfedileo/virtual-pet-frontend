@@ -11,21 +11,40 @@ interface ProductItemProps {
   name: string;
   price: number;
   image: string;
+  description: string;
 }
 
-const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image }) => {
+const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image, description }) => {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [showCheckmark, setShowCheckmark] = useState(false);
   const [snackbar, setSnackbar] = React.useState<{ open: boolean; message: string }>({ open: false, message: '' });
 
-  const handleIncrement = () => setQuantity((q) => q + 1);
-  const handleDecrement = () => setQuantity((q) => Math.max(1, q - 1));
 
-  const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart({ id, name, price, image, quantity: 1 });
-    }
+  // 2. NUEVO . Estado para manejar el giro de la tarjeta
+  const [isFlipped, setIsFlipped] = useState(false);
+
+
+  
+  // 3. CAMBIO: Detener la propagación del clic en los botones
+  //    Esto es CRUCIAL para que al hacer clic en un botón no se gire la tarjeta.
+  const handleIncrement = (e: React.MouseEvent) => {
+    e.stopPropagation(); // <-- NUEVO
+    setQuantity((q) => q + 1);
+  };
+
+
+  
+  const handleDecrement = (e: React.MouseEvent) => {
+    e.stopPropagation(); // <-- NUEVO
+    setQuantity((q) => Math.max(1, q - 1));
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation(); // <-- NUEVO
+
+
+    addToCart({ id, name, price, image, quantity: quantity }); //📌 Cuidado, chequear esto
     
     // Show animated checkmark
     setShowCheckmark(true);
@@ -36,22 +55,56 @@ const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image }) => 
     setQuantity(1);
   };
 
+
+  // 4. NUEVO: Función para girar la tarjeta
+  const handleCardClick = () => {
+    setIsFlipped(!isFlipped);
+  };
+
+
   return (
+    <> {/* Usamos un Fragment para que el Snackbar no se vea afectado por el giro */}
     <Card
+      onClick={handleCardClick} // 5. CAMBIO: Añadir el 'onClick' principal
+      
       sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRadius: '12px',
-        boxShadow: '0 2px 12px rgba(0, 94, 151, 0.1)',
-        transition: 'all 0.3s ease',
-        '&:hover': {
-          boxShadow: '0 8px 24px rgba(4, 119, 190, 0.2)',
-          transform: 'translateY(-4px)',
-        },
-        position: 'relative',
-      }}
+          height: '100%',
+          borderRadius: '12px',
+          boxShadow: '0 2px 12px rgba(0, 94, 151, 0.1)',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            boxShadow: '0 8px 24px rgba(4, 119, 190, 0.2)',
+            transform: 'translateY(-4px)',
+          },
+          // 6. NUEVO: Estilos para la perspectiva 3D
+          perspective: '1000px',
+          cursor: 'pointer',
+          position: 'relative', // Necesario para el overlay (ya estaba)
+        }}
     >
+    
+    {/* 7. NUEVO: Contenedor 'flipper' que aplica la rotación */}
+        <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            transition: 'transform 0.6s',
+            transformStyle: 'preserve-3d',
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+          }}
+        >
+          {/* 8. CARA FRONTAL (Contenido original de la tarjeta) */}
+          <Box
+            sx={{
+              //position: 'absolute',
+              width: '100%',
+              height: '100%',
+              backfaceVisibility: 'hidden', // Oculta esta cara cuando está girada
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
       {/* Animated Checkmark Overlay */}
       {showCheckmark && (
         <Box
@@ -76,19 +129,19 @@ const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image }) => 
             },
           }}
         >
-          <CheckCircleIcon
-            sx={{
-              fontSize: '64px',
-              color: '#FFFFFF',
-              animation: 'scaleCheck 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-              '@keyframes scaleCheck': {
-                '0%': { transform: 'scale(0)' },
-                '100%': { transform: 'scale(1)' },
-              },
-            }}
-          />
-        </Box>
-      )}
+        <CheckCircleIcon
+                  sx={{
+                    fontSize: '64px',
+                    color: '#FFFFFF',
+                    animation: 'scaleCheck 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+                    '@keyframes scaleCheck': {
+                      '0%': { transform: 'scale(0)' }, '100%': { transform: 'scale(1)' },
+                    },
+                  }}
+                />
+              </Box>
+            )}
+
       {/* Product Image */}
       <CardMedia
         component="img"
@@ -99,36 +152,37 @@ const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image }) => 
       />
 
       {/* Product Info */}
-      <Box sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="h6" component="div" sx={{ fontWeight: 600, color: '#005E97', mb: 0.5 }}>
-          {name}
-        </Typography>
-        <Typography variant="h6" sx={{ color: '#005E97', fontWeight: 'bold' }}>
-          ${price.toFixed(2)}
-        </Typography>
-      </Box>
+            <Box sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <Typography variant="h6" component="div" sx={{ fontWeight: 600, color: '#005E97', mb: 0.5 }}>
+                {name}
+              </Typography>
+              <Typography variant="h6" sx={{ color: '#005E97', fontWeight: 'bold' }}>
+                ${price.toFixed(2)}
+              </Typography>
+            </Box>
 
       {/* Bottom Section: Quantity Controls + Add to Cart */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          p: 2,
-          borderTop: '1px solid #E6E8EE',
-        }}
-      >
-        {/* Quantity Controls (Left) */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5,
-            backgroundColor: '#F1F3FA',
-            borderRadius: '24px',
-            p: 0.5,
-          }}
-        >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                p: 2,
+                borderTop: '1px solid #E6E8EE',
+              }}
+            >
+
+       {/* Quantity Controls (Left) */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  backgroundColor: '#F1F3FA',
+                  borderRadius: '24px',
+                  p: 0.5,
+                }}
+              >
           <IconButton
             size="small"
             onClick={handleDecrement}
@@ -186,22 +240,52 @@ const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image }) => 
           Comprar
         </Button>
       </Box>
+      </Box>
 
-      <Snackbar
+      {/* 9. CARA TRASERA (Contenido de la descripción) */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,   // <-- AÑADE ESTA LÍNEA
+              left: 0,  // <-- AÑADE ESTA LÍNEA
+              width: '100%',
+              height: '100%',
+              backfaceVisibility: 'hidden', // Oculta esta cara cuando está al frente
+              transform: 'rotateY(180deg)', // Gira la cara trasera para que se lea bien
+              backgroundColor: '#005E97', // Color de fondo de la cara trasera
+              color: '#FFFFFF',
+              borderRadius: '12px',
+              display: 'flex',
+              flexDirection: 'column',
+              p: 3,
+              boxSizing: 'border-box', // Asegura que el padding no rompa el layout
+            }}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+              {name}
+            </Typography>
+            <Typography variant="body2" sx={{ flex: 1, overflowY: 'auto' }}>
+              {description}
+            </Typography>
+          </Box>
+        </Box>
+      </Card>
+
+<Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
+        >
         <Alert
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           severity="success"
           sx={{ width: '100%' }}
-        >
+          >
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Card>
+    </>
   );
 };
 
