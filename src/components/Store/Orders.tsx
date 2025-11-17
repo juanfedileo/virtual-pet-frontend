@@ -118,8 +118,13 @@ const Orders: React.FC = () => {
                     <CardContent>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <Box>
+                          {/* <Typography variant="h6">Order #{o.id}</Typography>
+                          <Typography variant="caption" color="text.secondary">{new Date(o.createdAt).toLocaleString()}</Typography> */}
                           <Typography variant="h6">Order #{o.id}</Typography>
-                          <Typography variant="caption" color="text.secondary">{new Date(o.createdAt).toLocaleString()}</Typography>
+                          <Typography variant="caption" color="text.secondary">
+                              {/* Si existe o.createdAt, formatéala. Si no, muestra 'Fecha no disponible'. */}
+                              {o.createdAt ? new Date(o.createdAt).toLocaleString() : 'Fecha no disponible'}
+                            </Typography>
                         </Box>
                         <Chip label={o.status} color={o.status === 'Delivered' ? 'success' : o.status === 'Shipped' ? 'primary' : 'warning'} sx={{ ml: 1 }} />
                       </Box>
@@ -127,15 +132,16 @@ const Orders: React.FC = () => {
                       <Divider sx={{ my: 1 }} />
 
                       <Stack spacing={0.5}>
-                        {o.items?.map((it: any, idx: number) => (
-                          <Typography key={idx} variant="body2">
-                            {it.name} x{it.qty} — ${(it.price * it.qty).toFixed(2)}
-                          </Typography>
-                        ))}
+                        {o.itemsRead?.map((it: any, idx: number) => (
+                        <Typography key={idx} variant="body2">
+                          {it.product.title} x{it.quantity} — 
+                          ${(Number(it.priceAtPurchase) * it.quantity).toFixed(2)}
+                        </Typography>
+                      ))}
                       </Stack>
                     </CardContent>
                     <CardActions sx={{ justifyContent: 'flex-end', px: 2, pb: 2 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>${o.total.toFixed(2)}</Typography>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>${Number(o.total).toFixed(2)}</Typography>
                     </CardActions>
                   </Card>
                 ))}
