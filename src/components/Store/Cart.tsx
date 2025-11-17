@@ -25,14 +25,19 @@ const Cart: React.FC = () => {
 
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
-    const productIds = cart.map((it) => it.id);
+    // const productIds = cart.map((it) => it.id);
+    // 1. Cambia cómo mapeas el carrito
+    const itemsPayload = cart.map((it) => ({
+      product_id: it.id,
+      quantity: it.quantity,
+    }));
 
     const body = {
-      client: clientId,
-      employee: null,
-      products: productIds,
-      status: 'pending',
-    };
+        client: clientId,
+        employee: null, 
+        items: itemsPayload, // <-- Clave nueva ('items' en lugar de 'products')
+        status: 'pending',
+  };
 
     setIsCheckingOut(true);
     try {
