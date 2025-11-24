@@ -111,8 +111,8 @@ const BackOffice: React.FC = () => {
   const updateOrderStatus = (orderId: number, newStatus: string) => {
     const updateStatusOnAPI = async () => {
       try {
-        const res = await fetch(`${API_URL}/orders/${orderId}/set-estado/`, {
-          method: 'PUT',
+        const res = await fetch(`${API_URL}/orders/${orderId}/set-status/`, {
+          method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
@@ -210,7 +210,8 @@ const BackOffice: React.FC = () => {
                     </CardContent>
                     <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
                       <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        Total: ${o.total.toFixed(2)}
+                        {/* Total: ${o.total.toFixed(2)} */}
+                        Total: ${Number(o.total).toFixed(2)}
                       </Typography>
                       <Box sx={{ display: 'flex', gap: 1 }}>
                         <Button

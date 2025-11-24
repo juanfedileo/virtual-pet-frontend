@@ -116,6 +116,8 @@ const Register: React.FC = () => {
         email: formData.email,
         password: formData.password,
         role: 'cliente',
+        address: formData.address,
+        phone: formData.phone,
       });
 
       // Store tokens
