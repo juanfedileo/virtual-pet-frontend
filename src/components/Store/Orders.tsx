@@ -58,7 +58,7 @@ const Orders: React.FC = () => {
   React.useEffect(() => {
     const fetchOrders = async () => {
       if (!accessToken) {
-        setError('No authentication token found');
+        setError('Sin token de autenticacion');
         return;
       }
 
@@ -73,15 +73,15 @@ const Orders: React.FC = () => {
         });
 
         if (!res.ok) {
-          throw new Error(`Failed to fetch orders: ${res.status}`);
+          throw new Error(`Error al traer los pedidos: ${res.status}`);
         }
 
         const data = await res.json();
         setOrders(data);
       } catch (err: unknown) {
-        console.error('Error fetching orders:', err);
-        setError((err as Error).message || 'Failed to load orders');
-        setOrders(mockOrders);
+        console.error('Error al cargar los pedidos:', err);
+        setError((err as Error).message || 'Error al cargar los pedidos');
+        //setOrders(mockOrders);
       } finally {
         setLoading(false);
       }

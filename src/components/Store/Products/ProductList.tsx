@@ -105,15 +105,14 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm = "" }) => {
           url += `?category=${encodeURIComponent(category)}`;
         }
         const res = await fetch(url);
-        if (!res.ok) throw new Error(`Failed to fetch products: ${res.status}`);
+        if (!res.ok) throw new Error(`Error al traer los productos: ${res.status}`);
         const data: Product[] = await res.json();
         setProducts(data);
         
       //setProducts(mockProducts); // <-- eliminar cuando no se usen mocks
       } catch (err: unknown) {
         // Fall back to mock products if API fails
-        console.warn('Failed to fetch from API, using mock products:', err);
-        setProducts(mockProducts);
+        //setProducts(mockProducts);
       } finally {
         setLoading(false);
       }

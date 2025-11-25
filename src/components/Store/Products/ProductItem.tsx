@@ -284,12 +284,12 @@ const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image, descr
         </Box>
       </Card>
 
-<Snackbar
+      <Snackbar
         open={snackbar.open}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        >
+      >
         <Alert
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           severity="success"

@@ -60,7 +60,7 @@ export const registerUser = async (payload: RegisterPayload): Promise<AuthRespon
     if (!response.ok) {
       const error = await response.json();
       throw {
-        message: error.detail || 'Registration failed',
+        message: error.detail || 'Error al registrarse',
         errors: error,
       };
     }
@@ -70,7 +70,7 @@ export const registerUser = async (payload: RegisterPayload): Promise<AuthRespon
   } catch (error: unknown) {
     if (error instanceof TypeError) {
       throw {
-        message: 'Network error: Unable to reach the server',
+        message: 'Error de conexion: No se pudo contactar al servidor',
         errors: {},
       };
     }
@@ -94,7 +94,7 @@ export const loginUser = async (payload: LoginPayload): Promise<AuthResponse> =>
     if (!response.ok) {
       const error = await response.json();
       throw {
-        message: error.detail || 'Login failed',
+        message: error.detail || 'Error al iniciar sesion',
         errors: error,
       };
     }
@@ -104,7 +104,7 @@ export const loginUser = async (payload: LoginPayload): Promise<AuthResponse> =>
   } catch (error: unknown) {
     if (error instanceof TypeError) {
       throw {
-        message: 'Network error: Unable to reach the server',
+        message: 'Error de conexion: No se pudo contactar al servidor',
         errors: {},
       };
     }

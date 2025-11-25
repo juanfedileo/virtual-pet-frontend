@@ -92,15 +92,15 @@ const BackOffice: React.FC = () => {
         });
 
         if (!res.ok) {
-          throw new Error(`Failed to fetch orders: ${res.status}`);
+          throw new Error(`Error al traer ordenes: ${res.status}`);
         }
 
         const data = await res.json();
         setOrders(data);
       } catch (err: unknown) {
         console.error('Error fetching orders:', err);
-        setError((err as Error).message || 'Failed to load orders');
-        setOrders(mockAllOrders);
+        setError((err as Error).message || 'Error al cargar ordenes');
+        //setOrders(mockAllOrders);
       } finally {
         setLoading(false);
       }
@@ -256,7 +256,7 @@ const BackOffice: React.FC = () => {
 
         <Snackbar
           open={snackbar.open}
-          autoHideDuration={4000}
+          autoHideDuration={2000}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
