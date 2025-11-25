@@ -3,6 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Link, useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
@@ -62,64 +63,74 @@ const NavBar = () => {
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
-            <IconButton
-              component={Link}
-              to="/cart"
-              color="inherit"
-              aria-label="carrito"
-              sx={{
-                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
-                transition: 'background-color 0.3s',
-              }}
-            >
-              <Badge badgeContent={itemCount} color="error" overlap="circular" invisible={itemCount === 0}>
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
-
-            {isAuthenticated && role === 'cliente' && (
+            <Tooltip title="Carrito">
               <IconButton
                 component={Link}
-                to="/orders"
+                to="/cart"
                 color="inherit"
-                aria-label="pedidos"
-                sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
+                aria-label="carrito"
+                sx={{
+                  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+                  transition: 'background-color 0.3s',
+                }}
               >
-                <ReceiptLongIcon />
+                <Badge badgeContent={itemCount} color="error" overlap="circular" invisible={itemCount === 0}>
+                  <ShoppingCartIcon />
+                </Badge>
               </IconButton>
+            </Tooltip>
+
+            {isAuthenticated && role === 'cliente' && (
+              <Tooltip title="Mis pedidos">
+                <IconButton
+                  component={Link}
+                  to="/orders"
+                  color="inherit"
+                  aria-label="pedidos"
+                  sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
+                >
+                  <ReceiptLongIcon />
+                </IconButton>
+              </Tooltip>
             )}
 
             {isAuthenticated && role === 'empleado' && (
-              <IconButton
-                component={Link}
-                to="/backoffice"
-                color="inherit"
-                aria-label="oficina-administrativa"
-                sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
-              >
-                <AdminPanelSettingsIcon />
-              </IconButton>
+              <Tooltip title="Oficina administrativa">
+                <IconButton
+                  component={Link}
+                  to="/backoffice"
+                  color="inherit"
+                  aria-label="oficina-administrativa"
+                  sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
+                >
+                  <AdminPanelSettingsIcon />
+                </IconButton>
+              </Tooltip>
             )}
 
             {!isAuthenticated ? (
-              <IconButton
-                component={Link}
-                to="/login"
-                color="inherit"
-                aria-label="iniciar-sesion"
-                sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
-              >
-                <PersonIcon />
-              </IconButton>
+              <Tooltip title="Iniciar sesión">
+                <IconButton
+                  component={Link}
+                  to="/login"
+                  color="inherit"
+                  aria-label="iniciar-sesion"
+                  sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
+                >
+                  <PersonIcon />
+                </IconButton>
+              </Tooltip>
             ) : (
-              <IconButton
-                onClick={handleLogout}
-                color="inherit"
-                aria-label="cerrar-sesion"
-                sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
-              >
-                <LogoutIcon />
-              </IconButton>
+              <Tooltip title="Cerrar sesión">
+                <IconButton
+                  onClick={handleLogout}
+                  color="inherit"
+                  aria-label="cerrar-sesion"
+                  sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }, transition: 'background-color 0.3s' }}
+                >
+                  <LogoutIcon />
+                </IconButton>
+              </Tooltip>
             )}
           </Box>
         </Toolbar>

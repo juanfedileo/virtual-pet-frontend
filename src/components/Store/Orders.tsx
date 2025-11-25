@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from '../../context/AuthContext';
+import { normalizeStatus, translateStatusToSpanish, statusChipColor } from '../../utils/status';
 
 const mockOrders = [
   {
@@ -126,7 +127,7 @@ const Orders: React.FC = () => {
                               {o.createdAt ? new Date(o.createdAt).toLocaleString() : 'Fecha no disponible'}
                             </Typography>
                         </Box>
-                        <Chip label={o.status} color={o.status === 'Delivered' ? 'success' : o.status === 'Shipped' ? 'primary' : 'warning'} sx={{ ml: 1 }} />
+                        <Chip label={translateStatusToSpanish(o.status)} color={statusChipColor(o.status) as any} sx={{ ml: 1 }} />
                       </Box>
 
                       <Divider sx={{ my: 1 }} />

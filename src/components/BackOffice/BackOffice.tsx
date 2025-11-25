@@ -1,4 +1,5 @@
 import React from 'react';
+import { normalizeStatus, translateStatusToSpanish, statusChipColor } from '../../utils/status';
 import {
   Box,
   Typography,
@@ -123,15 +124,15 @@ const BackOffice: React.FC = () => {
         });
 
         if (!res.ok) {
-          throw new Error(`Failed to update order status: ${res.status}`);
+          throw new Error(`Error al actualizar el estado del pedido: ${res.status}`);
         }
 
-        // Update local state on success
+        // Update local state on success (save raw/newStatus)
         setOrders((prev) =>
           prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
         );
       } catch (err: unknown) {
-        console.error('Error updating order status:', err);
+        console.error('Error al actualizar el estado del pedido:', err);
         setSnackbar({ open: true, message: 'Error al actualizar el estado del pedido. Por favor intenta de nuevo.', severity: 'error' });
       }
     };
@@ -175,7 +176,7 @@ const BackOffice: React.FC = () => {
                     <CardContent>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <Box>
-                          <Typography variant="h6">Order #{o.id}</Typography>
+                          <Typography variant="h6">Orden #{o.id}</Typography>
                           <Typography variant="body2" color="text.secondary">
                             Cliente: {o.client} ({o.email})
                           </Typography>
@@ -183,17 +184,10 @@ const BackOffice: React.FC = () => {
                             {new Date(o.createdAt).toLocaleString()}
                           </Typography>
                         </Box>
+                        {/* Use translated label and color based on raw status */}
                         <Chip
-                          label={o.status}
-                          color={
-                            o.status === 'Delivered'
-                              ? 'success'
-                              : o.status === 'Shipped'
-                              ? 'primary'
-                              : o.status === 'Ready to ship'
-                              ? 'warning'
-                              : 'default'
-                          }
+                          label={translateStatusToSpanish(o.status)}
+                          color={statusChipColor(o.status) as any}
                           sx={{ ml: 1 }}
                         />
                       </Box>
@@ -218,8 +212,12 @@ const BackOffice: React.FC = () => {
                           size="small"
                           variant="outlined"
                           sx={{ color: '#714F3A', borderColor: '#8C6751', '&:hover': { backgroundColor: '#FFF1EA' } }}
-                          onClick={() => updateOrderStatus(o.id, 'Ready to ship')}
-                          disabled={o.status === 'Ready to ship' || o.status === 'Shipped' || o.status === 'Delivered'}
+                          onClick={() => updateOrderStatus(o.id, 'ready to ship')}
+                          disabled={
+                            normalizeStatus(o.status) === 'ready to ship' ||
+                            normalizeStatus(o.status) === 'shipped' ||
+                            normalizeStatus(o.status) === 'delivered'
+                          }
                         >
                           Listo para enviar
                         </Button>
@@ -227,10 +225,21 @@ const BackOffice: React.FC = () => {
                           size="small"
                           variant="outlined"
                           sx={{ color: '#005E97', borderColor: '#0477BE', '&:hover': { backgroundColor: '#EBF0FA' } }}
-                          onClick={() => updateOrderStatus(o.id, 'Shipped')}
-                          disabled={o.status === 'Shipped' || o.status === 'Delivered'}
+                          onClick={() => updateOrderStatus(o.id, 'shipped')}
+                          disabled={
+                            normalizeStatus(o.status) === 'shipped' || normalizeStatus(o.status) === 'delivered'
+                          }
                         >
                           Enviado
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          sx={{ color: '#1E7A1E', borderColor: '#2e7d32', '&:hover': { backgroundColor: '#E6F4EA' } }}
+                          onClick={() => updateOrderStatus(o.id, 'delivered')}
+                          disabled={normalizeStatus(o.status) === 'delivered'}
+                        >
+                          Entregado
                         </Button>
                       </Box>
                     </CardActions>

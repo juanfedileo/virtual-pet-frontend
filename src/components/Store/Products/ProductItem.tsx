@@ -156,6 +156,19 @@ const ProductItem: React.FC<ProductItemProps> = ({ id, name, price, image, descr
               <Typography variant="h6" component="div" sx={{ fontWeight: 600, color: '#005E97', mb: 0.5 }}>
                 {name}
               </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: '#6B7280',
+                  mb: 1,
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                }}
+              >
+                {description}
+              </Typography>
               <Typography variant="h6" sx={{ color: '#005E97', fontWeight: 'bold' }}>
                 ${price.toFixed(2)}
               </Typography>
