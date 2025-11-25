@@ -121,7 +121,7 @@ const Orders: React.FC = () => {
                         <Box>
                           {/* <Typography variant="h6">Order #{o.id}</Typography>
                           <Typography variant="caption" color="text.secondary">{new Date(o.createdAt).toLocaleString()}</Typography> */}
-                          <Typography variant="h6">Order #{o.id}</Typography>
+                          <Typography variant="h6">Orden #{o.id}</Typography>
                           <Typography variant="caption" color="text.secondary">
                               {/* Si existe o.createdAt, formatéala. Si no, muestra 'Fecha no disponible'. */}
                               {o.createdAt ? new Date(o.createdAt).toLocaleString() : 'Fecha no disponible'}

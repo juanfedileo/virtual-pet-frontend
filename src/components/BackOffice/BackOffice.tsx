@@ -24,6 +24,8 @@ const mockAllOrders = [
     id: 1001,
     client: 'John Doe',
     email: 'john@example.com',
+      shippingName: 'John Recipient',
+      shippingAddress: '123 Recipient St, City, Country',
     items: [
       { name: 'Dog Food - 5kg', qty: 1, price: 29.99 },
       { name: 'Chew Toy', qty: 2, price: 9.99 },
@@ -36,6 +38,8 @@ const mockAllOrders = [
     id: 1002,
     client: 'Jane Smith',
     email: 'jane@example.com',
+      shippingName: 'Jane Receiver',
+      shippingAddress: '456 Receiver Ave, Town, Country',
     items: [{ name: 'Cat Bed', qty: 1, price: 39.99 }],
     status: 'Processing',
     total: 39.99,
@@ -45,6 +49,8 @@ const mockAllOrders = [
     id: 1003,
     client: 'Bob Johnson',
     email: 'bob@example.com',
+      shippingName: 'Bob Recipient',
+      shippingAddress: '789 Delivery Rd, Village, Country',
     items: [
       { name: 'Vaccine', qty: 1, price: 19.99 },
       { name: 'Medication', qty: 1, price: 14.99 },
@@ -57,6 +63,8 @@ const mockAllOrders = [
     id: 1004,
     client: 'Alice Brown',
     email: 'alice@example.com',
+      shippingName: 'Alice Receiver',
+      shippingAddress: '12 Bird Ln, City, Country',
     items: [{ name: 'Bird Cage', qty: 1, price: 59.99 }],
     status: 'Processing',
     total: 59.99,
@@ -179,6 +187,12 @@ const BackOffice: React.FC = () => {
                           <Typography variant="h6">Orden #{o.id}</Typography>
                           <Typography variant="body2" color="text.secondary">
                             Cliente: {o.client} ({o.email})
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Usuario destinatario: {o.shippingName ?? '-'}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Direccion de envio: {o.shippingAddress ?? '-'}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
                             {new Date(o.createdAt).toLocaleString()}
