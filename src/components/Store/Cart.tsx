@@ -25,14 +25,19 @@ const Cart: React.FC = () => {
 
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
-    const productIds = cart.map((it) => it.id);
+    // const productIds = cart.map((it) => it.id);
+    // 1. Cambia cómo mapeas el carrito
+    const itemsPayload = cart.map((it) => ({
+      product_id: it.id,
+      quantity: it.quantity,
+    }));
 
     const body = {
-      client: clientId,
-      employee: null,
-      products: productIds,
-      status: 'pending',
-    };
+        client: clientId,
+        employee: null, 
+        items: itemsPayload, // <-- Clave nueva ('items' en lugar de 'products')
+        status: 'pending',
+  };
 
     setIsCheckingOut(true);
     try {
@@ -47,16 +52,16 @@ const Cart: React.FC = () => {
 
       if (!res.ok) {
         const errText = await res.text();
-        throw new Error(`Failed to create order: ${res.status} ${errText}`);
+        throw new Error(`Error al crear el pedido: ${res.status} ${errText}`);
       }
 
       const data = await res.json();
-      console.log('Order created', data);
+      console.log('Orden creada', data);
       // Clear cart and redirect to orders
       clearCart();
       navigate('/orders');
     } catch (err: unknown) {
-      console.error('Checkout error:', err);
+      console.error('Error en el checkout', err);
       setSnackbar({ open: true, message: 'Error al realizar el pedido. Por favor, intenta de nuevo.', severity: 'error' });
     } finally {
       setIsCheckingOut(false);
@@ -67,13 +72,9 @@ const Cart: React.FC = () => {
     const clientId = getClientId();
     const token = getAccessToken();
 
-    console.log('Checkout clicked - isAuthenticated:', isAuthenticated, 'clientId:', clientId, 'token:', token);
-
     // If not authenticated, redirect to login and mark checkout as pending
     if (!isAuthenticated || !clientId || !token) {
-      console.log('Not authenticated, setting pending_checkout flag and redirecting to login');
       sessionStorage.setItem(PENDING_CHECKOUT, 'true');
-      console.log('Set sessionStorage pending_checkout:', sessionStorage.getItem(PENDING_CHECKOUT));
       navigate('/login');
       return;
     }
@@ -140,7 +141,7 @@ const Cart: React.FC = () => {
                           <Typography variant="h6">{it.name}</Typography>
                           <Typography variant="body2" color="text.secondary">Cantidad: {it.quantity}</Typography>
                         </Box>
-                        <IconButton edge="end" aria-label="delete" onClick={() => removeFromCart(it.id)}>
+                        <IconButton edge="end" aria-label="Eliminar" onClick={() => removeFromCart(it.id)}>
                           <DeleteIcon />
                         </IconButton>
                       </Box>
@@ -186,7 +187,7 @@ const Cart: React.FC = () => {
 
         <Snackbar
           open={snackbar.open}
-          autoHideDuration={4000}
+          autoHideDuration={2000}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         >

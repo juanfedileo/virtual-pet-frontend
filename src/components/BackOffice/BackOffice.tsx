@@ -1,4 +1,5 @@
 import React from 'react';
+import { normalizeStatus, translateStatusToSpanish, statusChipColor } from '../../utils/status';
 import {
   Box,
   Typography,
@@ -18,11 +19,14 @@ import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from '../../context/AuthContext';
 
+/*
 const mockAllOrders = [
   {
     id: 1001,
     client: 'John Doe',
     email: 'john@example.com',
+      shippingName: 'John Recipient',
+      shippingAddress: '123 Recipient St, City, Country',
     items: [
       { name: 'Dog Food - 5kg', qty: 1, price: 29.99 },
       { name: 'Chew Toy', qty: 2, price: 9.99 },
@@ -35,6 +39,8 @@ const mockAllOrders = [
     id: 1002,
     client: 'Jane Smith',
     email: 'jane@example.com',
+      shippingName: 'Jane Receiver',
+      shippingAddress: '456 Receiver Ave, Town, Country',
     items: [{ name: 'Cat Bed', qty: 1, price: 39.99 }],
     status: 'Processing',
     total: 39.99,
@@ -44,6 +50,8 @@ const mockAllOrders = [
     id: 1003,
     client: 'Bob Johnson',
     email: 'bob@example.com',
+      shippingName: 'Bob Recipient',
+      shippingAddress: '789 Delivery Rd, Village, Country',
     items: [
       { name: 'Vaccine', qty: 1, price: 19.99 },
       { name: 'Medication', qty: 1, price: 14.99 },
@@ -56,12 +64,15 @@ const mockAllOrders = [
     id: 1004,
     client: 'Alice Brown',
     email: 'alice@example.com',
+      shippingName: 'Alice Receiver',
+      shippingAddress: '12 Bird Ln, City, Country',
     items: [{ name: 'Bird Cage', qty: 1, price: 59.99 }],
     status: 'Processing',
     total: 59.99,
     createdAt: new Date().toISOString(),
   },
 ];
+*/
 
 const BackOffice: React.FC = () => {
   const navigate = useNavigate();
@@ -91,15 +102,15 @@ const BackOffice: React.FC = () => {
         });
 
         if (!res.ok) {
-          throw new Error(`Failed to fetch orders: ${res.status}`);
+          throw new Error(`Error al traer ordenes: ${res.status}`);
         }
 
         const data = await res.json();
         setOrders(data);
       } catch (err: unknown) {
         console.error('Error fetching orders:', err);
-        setError((err as Error).message || 'Failed to load orders');
-        setOrders(mockAllOrders);
+        setError((err as Error).message || 'Error al cargar ordenes');
+        //setOrders(mockAllOrders);
       } finally {
         setLoading(false);
       }
@@ -111,8 +122,8 @@ const BackOffice: React.FC = () => {
   const updateOrderStatus = (orderId: number, newStatus: string) => {
     const updateStatusOnAPI = async () => {
       try {
-        const res = await fetch(`${API_URL}/orders/${orderId}/set-estado/`, {
-          method: 'PUT',
+        const res = await fetch(`${API_URL}/orders/${orderId}/set-status/`, {
+          method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
@@ -123,15 +134,15 @@ const BackOffice: React.FC = () => {
         });
 
         if (!res.ok) {
-          throw new Error(`Failed to update order status: ${res.status}`);
+          throw new Error(`Error al actualizar el estado del pedido: ${res.status}`);
         }
 
-        // Update local state on success
+        // Update local state on success (save raw/newStatus)
         setOrders((prev) =>
           prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
         );
       } catch (err: unknown) {
-        console.error('Error updating order status:', err);
+        console.error('Error al actualizar el estado del pedido:', err);
         setSnackbar({ open: true, message: 'Error al actualizar el estado del pedido. Por favor intenta de nuevo.', severity: 'error' });
       }
     };
@@ -175,25 +186,24 @@ const BackOffice: React.FC = () => {
                     <CardContent>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <Box>
-                          <Typography variant="h6">Order #{o.id}</Typography>
+                          <Typography variant="h6">Orden #{o.id}</Typography>
                           <Typography variant="body2" color="text.secondary">
                             Cliente: {o.client} ({o.email})
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Usuario destinatario: {o.shippingName ?? '-'}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Direccion de envio: {o.shippingAddress ?? '-'}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
                             {new Date(o.createdAt).toLocaleString()}
                           </Typography>
                         </Box>
+                        {/* Use translated label and color based on raw status */}
                         <Chip
-                          label={o.status}
-                          color={
-                            o.status === 'Delivered'
-                              ? 'success'
-                              : o.status === 'Shipped'
-                              ? 'primary'
-                              : o.status === 'Ready to ship'
-                              ? 'warning'
-                              : 'default'
-                          }
+                          label={translateStatusToSpanish(o.status)}
+                          color={statusChipColor(o.status) as any}
                           sx={{ ml: 1 }}
                         />
                       </Box>
@@ -210,15 +220,20 @@ const BackOffice: React.FC = () => {
                     </CardContent>
                     <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
                       <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        Total: ${o.total.toFixed(2)}
+                        {/* Total: ${o.total.toFixed(2)} */}
+                        Total: ${Number(o.total).toFixed(2)}
                       </Typography>
                       <Box sx={{ display: 'flex', gap: 1 }}>
                         <Button
                           size="small"
                           variant="outlined"
                           sx={{ color: '#714F3A', borderColor: '#8C6751', '&:hover': { backgroundColor: '#FFF1EA' } }}
-                          onClick={() => updateOrderStatus(o.id, 'Ready to ship')}
-                          disabled={o.status === 'Ready to ship' || o.status === 'Shipped' || o.status === 'Delivered'}
+                          onClick={() => updateOrderStatus(o.id, 'ready to ship')}
+                          disabled={
+                            normalizeStatus(o.status) === 'ready to ship' ||
+                            normalizeStatus(o.status) === 'shipped' ||
+                            normalizeStatus(o.status) === 'delivered'
+                          }
                         >
                           Listo para enviar
                         </Button>
@@ -226,10 +241,21 @@ const BackOffice: React.FC = () => {
                           size="small"
                           variant="outlined"
                           sx={{ color: '#005E97', borderColor: '#0477BE', '&:hover': { backgroundColor: '#EBF0FA' } }}
-                          onClick={() => updateOrderStatus(o.id, 'Shipped')}
-                          disabled={o.status === 'Shipped' || o.status === 'Delivered'}
+                          onClick={() => updateOrderStatus(o.id, 'shipped')}
+                          disabled={
+                            normalizeStatus(o.status) === 'shipped' || normalizeStatus(o.status) === 'delivered'
+                          }
                         >
                           Enviado
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          sx={{ color: '#1E7A1E', borderColor: '#2e7d32', '&:hover': { backgroundColor: '#E6F4EA' } }}
+                          onClick={() => updateOrderStatus(o.id, 'delivered')}
+                          disabled={normalizeStatus(o.status) === 'delivered'}
+                        >
+                          Entregado
                         </Button>
                       </Box>
                     </CardActions>
@@ -246,7 +272,7 @@ const BackOffice: React.FC = () => {
 
         <Snackbar
           open={snackbar.open}
-          autoHideDuration={4000}
+          autoHideDuration={2000}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         >

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, Container, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
@@ -30,13 +31,10 @@ const Footer: React.FC = () => {
               Enlaces Rápidos
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Link href="#catalog" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
+              <Link component={RouterLink} to="/catalog" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
                 Catálogo
               </Link>
-              <Link href="#orders" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
-                Pedidos
-              </Link>
-              <Link href="#about" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
+              <Link component={RouterLink} to="/" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
                 Sobre Nosotros
               </Link>
               <Link href="#contact" underline="hover" sx={{ color: '#EBBDA3', '&:hover': { color: '#FFFFFF' }, transition: 'color 0.3s' }}>
