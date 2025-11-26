@@ -116,6 +116,8 @@ const Register: React.FC = () => {
         email: formData.email,
         password: formData.password,
         role: 'cliente',
+        address: formData.address,
+        phone: formData.phone,
       });
 
       // Store tokens
@@ -314,7 +316,7 @@ const Register: React.FC = () => {
             onClick={handleBack}
             variant="outlined"
           >
-            Back
+            Atras
           </Button>
           <Button
             onClick={handleNext}
@@ -333,7 +335,7 @@ const Register: React.FC = () => {
               />
             )}
             <span style={{ opacity: isLoading ? 0 : 1 }}>
-              {activeStep === 2 ? 'Register' : 'Next'}
+              {activeStep === 2 ? 'Registrar' : 'Siguiente'}
             </span>
           </Button>
         </Box>

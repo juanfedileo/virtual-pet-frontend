@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from '../../context/AuthContext';
+import { normalizeStatus, translateStatusToSpanish, statusChipColor } from '../../utils/status';
 
 const mockOrders = [
   {
@@ -57,7 +58,7 @@ const Orders: React.FC = () => {
   React.useEffect(() => {
     const fetchOrders = async () => {
       if (!accessToken) {
-        setError('No authentication token found');
+        setError('Sin token de autenticacion');
         return;
       }
 
@@ -72,15 +73,15 @@ const Orders: React.FC = () => {
         });
 
         if (!res.ok) {
-          throw new Error(`Failed to fetch orders: ${res.status}`);
+          throw new Error(`Error al traer los pedidos: ${res.status}`);
         }
 
         const data = await res.json();
         setOrders(data);
       } catch (err: unknown) {
-        console.error('Error fetching orders:', err);
-        setError((err as Error).message || 'Failed to load orders');
-        setOrders(mockOrders);
+        console.error('Error al cargar los pedidos:', err);
+        setError((err as Error).message || 'Error al cargar los pedidos');
+        //setOrders(mockOrders);
       } finally {
         setLoading(false);
       }
@@ -118,24 +119,30 @@ const Orders: React.FC = () => {
                     <CardContent>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <Box>
-                          <Typography variant="h6">Order #{o.id}</Typography>
-                          <Typography variant="caption" color="text.secondary">{new Date(o.createdAt).toLocaleString()}</Typography>
+                          {/* <Typography variant="h6">Order #{o.id}</Typography>
+                          <Typography variant="caption" color="text.secondary">{new Date(o.createdAt).toLocaleString()}</Typography> */}
+                          <Typography variant="h6">Orden #{o.id}</Typography>
+                          <Typography variant="caption" color="text.secondary">
+                              {/* Si existe o.createdAt, formatéala. Si no, muestra 'Fecha no disponible'. */}
+                              {o.createdAt ? new Date(o.createdAt).toLocaleString() : 'Fecha no disponible'}
+                            </Typography>
                         </Box>
-                        <Chip label={o.status} color={o.status === 'Delivered' ? 'success' : o.status === 'Shipped' ? 'primary' : 'warning'} sx={{ ml: 1 }} />
+                        <Chip label={translateStatusToSpanish(o.status)} color={statusChipColor(o.status) as any} sx={{ ml: 1 }} />
                       </Box>
 
                       <Divider sx={{ my: 1 }} />
 
                       <Stack spacing={0.5}>
-                        {o.items?.map((it: any, idx: number) => (
-                          <Typography key={idx} variant="body2">
-                            {it.name} x{it.qty} — ${(it.price * it.qty).toFixed(2)}
-                          </Typography>
-                        ))}
+                        {o.itemsRead?.map((it: any, idx: number) => (
+                        <Typography key={idx} variant="body2">
+                          {it.product.title} x{it.quantity} — 
+                          ${(Number(it.priceAtPurchase) * it.quantity).toFixed(2)}
+                        </Typography>
+                      ))}
                       </Stack>
                     </CardContent>
                     <CardActions sx={{ justifyContent: 'flex-end', px: 2, pb: 2 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>${o.total.toFixed(2)}</Typography>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>${Number(o.total).toFixed(2)}</Typography>
                     </CardActions>
                   </Card>
                 ))}
