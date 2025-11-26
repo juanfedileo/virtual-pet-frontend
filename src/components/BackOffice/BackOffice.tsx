@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from '../../context/AuthContext';
 
+/*
 const mockAllOrders = [
   {
     id: 1001,
@@ -71,6 +72,7 @@ const mockAllOrders = [
     createdAt: new Date().toISOString(),
   },
 ];
+*/
 
 const BackOffice: React.FC = () => {
   const navigate = useNavigate();

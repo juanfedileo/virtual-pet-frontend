@@ -14,8 +14,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from '../../context/AuthContext';
-import { normalizeStatus, translateStatusToSpanish, statusChipColor } from '../../utils/status';
+import { translateStatusToSpanish, statusChipColor } from '../../utils/status';
+//import { normalizeStatus} from '../../utils/status';
 
+/*
 const mockOrders = [
   {
     id: 1001,
@@ -45,6 +47,7 @@ const mockOrders = [
     createdAt: new Date().toISOString(),
   },
 ];
+*/
 
 const Orders: React.FC = () => {
   const navigate = useNavigate();

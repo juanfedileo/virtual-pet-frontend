@@ -20,6 +20,7 @@ interface ProductListProps {
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
+/*
 const mockProducts: Product[] = [
   {
     id: 1,
@@ -86,6 +87,7 @@ const mockProducts: Product[] = [
     description: "Queres que tu peludo luzca un pelo sedoso y brillante. Este es el shampu ideal para el. Y además, no irrita los ojitos!"
   },
 ];
+*/
 
 const ProductList: React.FC<ProductListProps> = ({ searchTerm = "" }) => {
   const [searchParams] = useSearchParams();
@@ -113,6 +115,8 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm = "" }) => {
       } catch (err: unknown) {
         // Fall back to mock products if API fails
         //setProducts(mockProducts);
+        console
+          .error('Error al cargar los productos:', err)
       } finally {
         setLoading(false);
       }
