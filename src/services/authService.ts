@@ -8,6 +8,9 @@ export interface RegisterPayload {
   // 👇 1. AGREGAMOS ESTOS CAMPOS A LA INTERFAZ
   address?: string;
   phone?: string;
+  // Campos opcionales para notificaciones
+  wpp?: string | null;
+  notifyEmail?: string | null;
 }
 
 export interface User {
@@ -54,6 +57,10 @@ export const registerUser = async (payload: RegisterPayload): Promise<AuthRespon
         // 👇 3. AGREGAMOS LOS DATOS AL JSON QUE SE ENVÍA AL BACKEND
         address: payload.address || '', 
         phone: payload.phone || ''
+        ,
+        // Notificaciones (pueden ser null)
+        wpp: payload.wpp ?? null,
+        notifyEmail: payload.notifyEmail ?? null,
       }),
     });
 

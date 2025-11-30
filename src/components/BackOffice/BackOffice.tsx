@@ -186,7 +186,7 @@ const BackOffice: React.FC = () => {
                         <Box>
                           <Typography variant="h6">Orden #{o.id}</Typography>
                           <Typography variant="body2" color="text.secondary">
-                            Cliente: {o.client} ({o.email})
+                            Cliente: {o.client}
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Usuario destinatario: {o.shippingName ?? '-'}
@@ -209,11 +209,32 @@ const BackOffice: React.FC = () => {
                       <Divider sx={{ my: 1 }} />
 
                       <Stack spacing={0.5}>
-                        {o.items?.map((it: any, idx: number) => (
-                          <Typography key={idx} variant="body2">
-                            {it.name} x{it.qty} — ${(it.price * it.qty).toFixed(2)}
-                          </Typography>
-                        ))}
+                        {(o.itemsRead ?? o.items ?? []).map((it: any, idx: number) => {
+                          // API `itemsRead` contains { product: { id, title, price, category }, quantity, priceAtPurchase }
+                          if (it.product) {
+                            const p = it.product;
+                            const qty = it.quantity ?? 1;
+                            const priceNum = Number(it.priceAtPurchase ?? p.price ?? 0);
+                            return (
+                              <Typography key={idx} variant="body2">
+                                Producto ID: {p.id} — {p.title} ({p.category}) x{qty} — ${priceNum.toFixed(2)}
+                              </Typography>
+                            );
+                          }
+
+                          // Fallback for older `items` shape
+                          if (it.name) {
+                            const qty = it.qty ?? 1;
+                            const priceNum = Number(it.price ?? 0);
+                            return (
+                              <Typography key={idx} variant="body2">
+                                Producto: {it.name} x{qty} — ${ (priceNum * qty).toFixed(2) }
+                              </Typography>
+                            );
+                          }
+
+                          return null;
+                        })}
                       </Stack>
                     </CardContent>
                     <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
