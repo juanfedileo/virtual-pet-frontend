@@ -15,6 +15,7 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
+import whatsappIcon from '../../assets/whatsapp.png';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from '../../context/AuthContext';
@@ -150,6 +151,25 @@ const BackOffice: React.FC = () => {
     updateStatusOnAPI();
   };
 
+  const openWhatsApp = (order: any, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    // try several possible phone fields returned by API
+    const candidates = [order.shippingPhone, order.wpp, order.notifyWpp, order.phone, order.clientPhone];
+    const raw = candidates.find((c) => !!c) ?? null;
+    if (!raw) {
+      setSnackbar({ open: true, message: 'No hay número de teléfono disponible para este pedido.', severity: 'error' });
+      return;
+    }
+    const digits = raw.toString().replace(/\D/g, '');
+    if (!digits || digits.length < 7) {
+      setSnackbar({ open: true, message: 'Número de teléfono inválido.', severity: 'error' });
+      return;
+    }
+    const msg = `Hola ${order.shippingName ?? ''}, respecto a tu pedido #${order.id} (Total: $${Number(order.total).toFixed(2)})`;
+    const url = `https://wa.me/${digits}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
       <Box sx={{ width: '100%', maxWidth: 900 }}>
@@ -244,7 +264,7 @@ const BackOffice: React.FC = () => {
                         {/* Total: ${o.total.toFixed(2)} */}
                         Total: ${Number(o.total).toFixed(2)}
                       </Typography>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                         <Button
                           size="small"
                           variant="outlined"
@@ -280,6 +300,21 @@ const BackOffice: React.FC = () => {
                         </Button>
                       </Box>
                     </CardActions>
+                    {/* WhatsApp icon container placed below action buttons */}
+                    <Box sx={{ px: 2, pb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                      <IconButton
+                        aria-label="whatsapp"
+                        disabled={normalizeStatus(o.status) !== 'shipped'}
+                        sx={{
+                          p: 0,
+                          opacity: normalizeStatus(o.status) !== 'shipped' ? 0.35 : 1,
+                          transition: 'opacity 0.18s',
+                        }}
+                        onClick={(e) => openWhatsApp(o, e)}
+                      >
+                        <Box component="img" src={whatsappIcon} alt="WhatsApp" sx={{ width: 36, height: 36 }} />
+                      </IconButton>
+                    </Box>
                   </Card>
                 ))}
               </Stack>

@@ -63,22 +63,24 @@ const NavBar = () => {
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
-            <Tooltip title="Carrito">
-              <IconButton
-                component={Link}
-                to="/cart"
-                color="inherit"
-                aria-label="carrito"
-                sx={{
-                  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
-                  transition: 'background-color 0.3s',
-                }}
-              >
-                <Badge badgeContent={itemCount} color="error" overlap="circular" invisible={itemCount === 0}>
-                  <ShoppingCartIcon />
-                </Badge>
-              </IconButton>
-            </Tooltip>
+            {role !== 'empleado' && (
+              <Tooltip title="Carrito">
+                <IconButton
+                  component={Link}
+                  to="/cart"
+                  color="inherit"
+                  aria-label="carrito"
+                  sx={{
+                    '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+                    transition: 'background-color 0.3s',
+                  }}
+                >
+                  <Badge badgeContent={itemCount} color="error" overlap="circular" invisible={itemCount === 0}>
+                    <ShoppingCartIcon />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+            )}
 
             {isAuthenticated && role === 'cliente' && (
               <Tooltip title="Mis pedidos">

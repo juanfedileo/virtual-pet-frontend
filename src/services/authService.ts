@@ -58,9 +58,10 @@ export const registerUser = async (payload: RegisterPayload): Promise<AuthRespon
         address: payload.address || '', 
         phone: payload.phone || ''
         ,
-        // Notificaciones (pueden ser null)
-        wpp: payload.wpp ?? null,
-        notifyEmail: payload.notifyEmail ?? null,
+        notifications:{
+          wpp: payload.wpp ?? null,
+          notifyEmail: payload.notifyEmail ?? null,
+        }
       }),
     });
 
