@@ -135,19 +135,26 @@ const Register: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-    setGeneralError('');
-    try {
+      setIsLoading(true);
+      setGeneralError('');
+      try {
+      // 1. Construimos el array de canales para el backend
+      const channels: string[] = [];
+      if (formData.useNotifyEmail) channels.push('email');
+      if (formData.useWpp) channels.push('whatsapp');
+
+      // 2. Enviamos los datos
       const response = await registerUser({
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        role: 'cliente',
-        address: formData.address,
-        phone: formData.phone,
-        // Include notification preferences (null if not opted-in)
-        wpp: formData.useWpp && formData.notifyWpp ? formData.notifyWpp : null,
-        notifyEmail: formData.useNotifyEmail && formData.notifyEmail ? formData.notifyEmail : null,
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      role: 'cliente',
+      address: formData.address,
+      phone: formData.phone, // Usamos el teléfono principal
+        first_name: formData.name,
+        last_name: formData.surname,
+        // 👇 AQUÍ ENVIAMOS LA LISTA
+        notification_channels: channels 
       });
 
       // Store tokens

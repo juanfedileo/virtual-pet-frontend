@@ -151,21 +151,35 @@ const BackOffice: React.FC = () => {
     updateStatusOnAPI();
   };
 
+  const getChannelIcon = (channel: string) => {
+  if (channel === 'email') return '📧 Email';
+  if (channel === 'whatsapp') return '📱 WhatsApp';
+  return channel;
+    };
+
   const openWhatsApp = (order: any, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    // try several possible phone fields returned by API
-    const candidates = [order.shippingPhone, order.wpp, order.notifyWpp, order.phone, order.clientPhone];
-    const raw = candidates.find((c) => !!c) ?? null;
-    if (!raw) {
-      setSnackbar({ open: true, message: 'No hay número de teléfono disponible para este pedido.', severity: 'error' });
+    
+    // 👇 AHORA BUSCAMOS EL CAMPO EXACTO QUE NOS MANDA EL BACKEND
+    const rawPhone = order.clientPhone; 
+
+    if (!rawPhone) {
+      setSnackbar({ open: true, message: 'El cliente no tiene un teléfono registrado.', severity: 'error' });
       return;
     }
-    const digits = raw.toString().replace(/\D/g, '');
+
+    // Limpiamos el número (dejamos solo dígitos)
+    const digits = rawPhone.toString().replace(/\D/g, '');
+    
     if (!digits || digits.length < 7) {
       setSnackbar({ open: true, message: 'Número de teléfono inválido.', severity: 'error' });
       return;
     }
-    const msg = `Hola ${order.shippingName ?? ''}, respecto a tu pedido #${order.id} (Total: $${Number(order.total).toFixed(2)})`;
+
+    // Mensaje personalizado
+    const clientName = order.shippingName || 'Cliente';
+    const msg = `Hola ${clientName}, te escribimos de Virtual Pet sobre tu pedido #${order.id}. Total: $${Number(order.total).toFixed(2)}. ¡Tu pedido ya fue enviado! 🚚`;
+    
     const url = `https://wa.me/${digits}?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
   };
@@ -216,6 +230,14 @@ const BackOffice: React.FC = () => {
                           <Typography variant="body2" color="text.secondary">
                             Direccion de envio: {o.shippingAddress ?? '-'}
                           </Typography>
+                          <Box sx={{ mt: 1 }}>
+                            <Typography variant="caption" sx={{ fontWeight: 'bold' }}>Notificar por: </Typography>
+                            {o.notificationChannels?.map((c: string) => (
+                              <span key={c} style={{ marginRight: '8px' }}>
+                                {c === 'email' ? '📧' : c === 'whatsapp' ? '📱' : ''} {c}
+                              </span>
+                            ))}
+                          </Box>
                           <Typography variant="caption" color="text.secondary">
                             {new Date(o.createdAt).toLocaleString()}
                           </Typography>
@@ -315,6 +337,15 @@ const BackOffice: React.FC = () => {
                         <Box component="img" src={whatsappIcon} alt="WhatsApp" sx={{ width: 36, height: 36 }} />
                       </IconButton>
                     </Box>
+                    <Box sx={{ display: 'flex', gap: 1, mt: 0.5, mb: 0.5 }}>
+                      {o.notificationChannels && o.notificationChannels.length > 0 ? (
+                        o.notificationChannels.map((c: string) => (
+                          <Chip key={c} label={getChannelIcon(c)} size="small" variant="outlined" />
+                        ))
+                      ) : (
+                        <Typography variant="caption" color="text.secondary">Sin notificaciones</Typography>
+                      )}
+                  </Box>
                   </Card>
                 ))}
               </Stack>
