@@ -129,6 +129,17 @@ const Orders: React.FC = () => {
                               {/* Si existe o.createdAt, formatéala. Si no, muestra 'Fecha no disponible'. */}
                               {o.createdAt ? new Date(o.createdAt).toLocaleString() : 'Fecha no disponible'}
                             </Typography>
+                            <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5, mb: 1 }}>
+                                {o.notificationChannels?.map((channel: string) => (
+                                  <Chip 
+                                    key={channel} 
+                                    label={channel === 'email' ? '📧 Email' : channel === 'whatsapp' ? '📱 WhatsApp' : channel} 
+                                    size="small" 
+                                    variant="outlined" 
+                                    sx={{ fontSize: '0.75rem', height: '24px' }}
+                                  />
+                                ))}
+                              </Box>
                         </Box>
                         <Chip label={translateStatusToSpanish(o.status)} color={statusChipColor(o.status) as any} sx={{ ml: 1 }} />
                       </Box>
