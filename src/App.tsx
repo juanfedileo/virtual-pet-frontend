@@ -11,8 +11,9 @@ import BackOffice from './components/BackOffice/BackOffice'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import Footer from './components/Footer/Footer'
 import { CartProvider } from './contexts/CartContext'
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
+import { useEffect } from 'react'
 import { Box } from '@mui/material'
 
 function App() {
@@ -20,6 +21,15 @@ function App() {
   const hideFooterRoutes = ['/login', '/register', '/backoffice'];
   const showFooter = !hideFooterRoutes.includes(location.pathname);
   const { isAuthenticated } = useAuth();
+  const { role } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // If an employee logs in, redirect them to backoffice
+    if (isAuthenticated && role === 'empleado' && location.pathname !== '/backoffice') {
+      navigate('/backoffice');
+    }
+  }, [isAuthenticated, role, location.pathname, navigate]);
 
   return (
     <CartProvider>

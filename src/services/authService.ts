@@ -5,9 +5,12 @@ export interface RegisterPayload {
   email: string;
   password: string;
   role?: string;
-  // 👇 1. AGREGAMOS ESTOS CAMPOS A LA INTERFAZ
   address?: string;
   phone?: string;
+  // 👇 AGREGAR ESTOS 3 PARA QUE DESAPAREZCA EL ERROR ROJO
+  first_name?: string;
+  last_name?: string;
+  notification_channels?: string[]; 
 }
 
 export interface User {
@@ -51,16 +54,24 @@ export const registerUser = async (payload: RegisterPayload): Promise<AuthRespon
         email: payload.email,
         password: payload.password,
         role: payload.role || 'cliente',
-        // 👇 3. AGREGAMOS LOS DATOS AL JSON QUE SE ENVÍA AL BACKEND
-        address: payload.address || '', 
-        phone: payload.phone || ''
+        
+        // Datos de contacto
+        address: payload.address || '',
+        phone: payload.phone || '',
+        
+        // Datos de nombre (para el saludo del mail)
+        firstName: payload.first_name || '',
+        last_name: payload.last_name || '',
+
+        // 👇 LA CLAVE: Enviamos la lista directa, no un objeto anidado
+        notification_channels: payload.notification_channels || [] 
       }),
     });
 
     if (!response.ok) {
       const error = await response.json();
       throw {
-        message: error.detail || 'Error al registrarse',
+        message: error.detail || 'Registration failed',
         errors: error,
       };
     }
@@ -70,7 +81,7 @@ export const registerUser = async (payload: RegisterPayload): Promise<AuthRespon
   } catch (error: unknown) {
     if (error instanceof TypeError) {
       throw {
-        message: 'Error de conexion: No se pudo contactar al servidor',
+        message: 'Network error: Unable to reach the server',
         errors: {},
       };
     }
